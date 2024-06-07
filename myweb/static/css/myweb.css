@@ -1,0 +1,56 @@
+nav {
+    background-color: #333;
+    font-size: 35px;
+}
+
+ul {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+}
+
+li {
+    float: left;
+}
+
+li a {
+    display: block;
+    color: white;
+    text-align: center;
+    padding: 14px 16px;
+    text-decoration: none;
+}
+
+a.nav-item:hover {
+    background-color: #111;
+}
+
+a.nav-item.active {
+    background-color: #009484;
+}
+
+main {
+    padding: 20px;
+    margin-top: 5px;
+    background-color: #009484;
+    height: 1500px;
+}
+
+main.file {
+    padding: 20px;
+    margin-top: 5px;
+    background-color: #009484;
+    height: 1500px;
+    font-size: 30px;
+}
+
+input.file {
+    font-size: 30px;
+}
+
+footer {
+    font-size: 20px;
+    text-align: center;
+    color: #009484;
+}

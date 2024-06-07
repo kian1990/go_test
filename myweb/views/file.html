@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <title>文件</title>
+  <link rel="icon" href="/static/img/kian.ico">
+</head>
+<body>
+{{template "nav.html" .}}
+<main class="file">
+  <h1>文件上传</h1>
+  <form action="/file" method="post" enctype="multipart/form-data">
+    <input class="file" type="file" id="file" name="file">
+    <input class="file" type="submit" value="上传">
+  </form>
+  <ul>
+    <h1>文件列表</h1>
+    {{ range .file }}
+    {{ . }}<br>
+    {{ end }}
+  </ul>
+</main>
+{{template "footer.html" .}}
+</body>
+</html>
