@@ -6,6 +6,7 @@ import (
     "fmt"
     "log"
     "net/http"
+    "os"
     "github.com/google/generative-ai-go/genai"
     "google.golang.org/api/option"
 )
@@ -20,14 +21,14 @@ type ChatResponse struct {
 
 func main() {
     http.HandleFunc("/chat", chatHandler)
-    log.Println("Server started at : http://localhost:9080/chat")
-    log.Fatal(http.ListenAndServe(":9080", nil))
+    log.Println("服务器运行在 http://127.0.0.1:9088/chat 上")
+    log.Fatal(http.ListenAndServe("127.0.0.1:9088", nil))
 }
 
 func chatHandler(w http.ResponseWriter, r *http.Request) {
-    apiKey := r.Header.Get("Authorization")
+    apiKey := os.Getenv("API_KEY")
     if apiKey == "" {
-        http.Error(w, "Authorization header is required", http.StatusUnauthorized)
+        http.Error(w, "API_KEY 环境变量是必须的", http.StatusUnauthorized)
         return
     }
 
