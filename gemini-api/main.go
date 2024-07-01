@@ -20,14 +20,14 @@ type ChatResponse struct {
 
 func main() {
     http.HandleFunc("/chat", chatHandler)
-    log.Println("Server started at : http://localhost:8080/chat")
-    log.Fatal(http.ListenAndServe(":8080", nil))
+    log.Println("Server started at : http://localhost:9080/chat")
+    log.Fatal(http.ListenAndServe(":9080", nil))
 }
 
 func chatHandler(w http.ResponseWriter, r *http.Request) {
-    apiKey := r.URL.Query().Get("key")
+    apiKey := r.Header.Get("Authorization")
     if apiKey == "" {
-        http.Error(w, "key parameter is required", http.StatusBadRequest)
+        http.Error(w, "Authorization header is required", http.StatusUnauthorized)
         return
     }
 
@@ -73,7 +73,6 @@ func extractResponse(resp *genai.GenerateContentResponse) string {
         if cand.Content != nil {
             for _, part := range cand.Content.Parts {
                 contentAsString := fmt.Sprintf("%v", part)
-
                 response += contentAsString + "\n"
             }
         }
