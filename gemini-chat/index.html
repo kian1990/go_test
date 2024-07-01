@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Gemini</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f0f0f0;
+      margin: 0;
+      padding: 0;
+    }
+    .chat-container {
+      max-width: 800px;
+      margin: 20px auto;
+      background-color: #fff;
+      border-radius: 8px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+    }
+    .chat-box {
+      height: 400px;
+      overflow-y: scroll;
+      padding: 20px;
+      flex-grow: 1;
+    }
+    .message {
+      padding: 10px;
+      margin-bottom: 10px;
+      border-radius: 5px;
+      max-width: 70%;
+    }
+    .message.user {
+      background-color: #dcf8c6; /* 用户消息的背景颜色 */
+      align-self: flex-end;
+    }
+    .message.bot {
+      background-color: #f1f0f0; /* 机器人回复的背景颜色 */
+    }
+    .message p {
+      margin: 5px 0;
+    }
+    .chat-input {
+      display: flex;
+      padding: 10px;
+      background-color: #f0f0f0;
+      border-top: 1px solid #ccc;
+    }
+    .chat-input input[type="text"] {
+      flex: 1;
+      padding: 8px;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+      outline: none;
+    }
+    .chat-input button {
+      padding: 8px 20px;
+      margin-left: 10px;
+      border: none;
+      background-color: #4CAF50;
+      color: #fff;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+    .error-message {
+      color: red;
+      text-align: center;
+      margin: 10px 0;
+    }
+  </style>
+</head>
+<body>
+  <div class="chat-container">
+    <div class="chat-box" id="chat-box">
+      {{range .Messages}}
+      <div class="message user">
+        <p>{{.UserMessage}}</p>
+      </div>
+      <div class="message bot">
+        <p>{{.Response}}</p>
+      </div>
+      {{end}}
+    </div>
+    <div class="chat-input">
+      <input type="text" id="message-input" placeholder="输入内容...">
+      <button id="send-button">发送</button>
+    </div>
+    <div class="error-message" id="error-message"></div>
+  </div>
+
+  <script>
+    document.getElementById("send-button").addEventListener("click", function() {
+      var messageInput = document.getElementById("message-input");
+      var messageText = messageInput.value.trim();
+      if (messageText !== "") {
+        sendMessage(messageText);
+        messageInput.value = "";
+      }
+    });
+
+    function sendMessage(message) {
+      var chatBox = document.getElementById("chat-box");
+      var errorMessage = document.getElementById("error-message");
+
+      // 创建用户发送的消息
+      var userMessage = document.createElement("div");
+      userMessage.className = "message user";
+      userMessage.innerHTML = `<p>${message}</p>`;
+      chatBox.appendChild(userMessage);
+
+      // 发送消息给后端
+      fetch('/', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/x-www-form-urlencoded',
+        },
+        body: 'message=' + encodeURIComponent(message),
+      })
+      .then(response => response.json())
+      .then(messages => {
+        // 清除旧的消息
+        var botMessages = document.querySelectorAll(".message.bot, .message.user");
+        botMessages.forEach(function(botMessage) {
+          botMessage.remove();
+        });
+
+        // 创建并显示服务器的回复
+        messages.forEach(msg => {
+          var userMessage = document.createElement("div");
+          userMessage.className = "message user";
+          userMessage.innerHTML = `<p>${msg.UserMessage}</p>`;
+          chatBox.appendChild(userMessage);
+
+          var botMessage = document.createElement("div");
+          botMessage.className = "message bot";
+          botMessage.innerHTML = `<p>${msg.Response.replace(/\n/g, "<br>")}</p>`;
+          chatBox.appendChild(botMessage);
+        });
+
+        // 自动滚动到底部
+        chatBox.scrollTop = chatBox.scrollHeight;
+      })
+      .catch(error => {
+        errorMessage.textContent = '发送消息时出错: ' + error;
+        console.error('发送消息时出错:', error);
+      });
+    }
+  </script>
+</body>
+</html>
