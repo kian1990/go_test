@@ -6,7 +6,6 @@ import (
     "fmt"
     "log"
     "net/http"
-    "os"
     "github.com/google/generative-ai-go/genai"
     "google.golang.org/api/option"
 )
@@ -26,9 +25,10 @@ func main() {
 }
 
 func chatHandler(w http.ResponseWriter, r *http.Request) {
-    apiKey := os.Getenv("API_KEY")
+    // 从URL查询参数中获取API_KEY
+    apiKey := r.URL.Query().Get("key")
     if apiKey == "" {
-        http.Error(w, "API_KEY 环境变量是必须的", http.StatusUnauthorized)
+        http.Error(w, "缺少 key 参数", http.StatusUnauthorized)
         return
     }
 
@@ -57,7 +57,7 @@ func getChatResponse(message string, apiKey string) (string, error) {
     }
     defer client.Close()
 
-    model := client.GenerativeModel("gemini-1.5-pro")
+    model := client.GenerativeModel("gemini-2.0-flash")
     cs := model.StartChat()
 
     res, err := cs.SendMessage(ctx, genai.Text(message))
