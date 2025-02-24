@@ -1,0 +1,5 @@
+CREATE TABLE `rabbitmq` (
+  `id` INT AUTO_INCREMENT PRIMARY KEY,
+  `message` TEXT,
+  `message_time` TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
