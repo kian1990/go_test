@@ -1,0 +1,2 @@
+#kian_my_bot
+export KIAN_MY_BOT=7634142099:AAEJP8LlvbpioDImNrt0lBMAG0Ic9-2ammA

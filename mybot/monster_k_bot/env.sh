@@ -1,0 +1,3 @@
+#monster_k_bot
+export MONSTER_K_BOT=7244181110:AAFSonWyBpntmJoL1S2dNsrKkMQu-4_vnU0
+export GEMINI_API_KEY=AIzaSyDj4nWVYvErFPH3DZM5epn0hdXsc3u32-I
